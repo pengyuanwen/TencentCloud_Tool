@@ -45,3 +45,4 @@ def send_mail(to_list,sub):
         return False
 if __name__ == '__main__':
         send_mail(mailto_list,sub)
+		
