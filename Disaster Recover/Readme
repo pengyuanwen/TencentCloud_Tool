@@ -1,0 +1,30 @@
+容灾演练
+广州切换到上海（/home/yuanwen.peng/scripts/python/qiehuan）
+1.广州DB开启只读，执行脚本：
+python read_only.py gz/sh
+
+2.检查只读是否全部开启
+python check_readonly.py
+
+3.检查上海容灾DB从库数据是否追平，执行脚本：
+python check_slave_behind.py
+
+4.提升上海容灾DB为主实例：(得到任务ID，在第5步通过任务ID去检查)
+python master_to_dr.py gz/sh
+
+5.检查容灾DB是否全部提升成功：
+python check_job.py gz/sh
+
+6.重新创建复制关系（上海主-广州备）
+python change_master.py gz/sh
+
+7.检查是否重新建立复制关系
+python check_switch_job.py
+
+
+8.切换不成功的实例进行再次切换，重新生成切换格式{广州:上海}
+python format_sid.py gz/sh
+
+
+上海切换到广州
+同广州一样，只用更改广州执行函数即可
