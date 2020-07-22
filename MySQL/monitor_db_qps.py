@@ -57,7 +57,7 @@ class Datetime_Format(object):
 
 
 class SqlInit(object):
-    cqb_sid = 'select project_name,masterSID,masterIP from qcloud_info.db_info where created >= \'%s\' and  created <= \'%s\';' % (
+    cqb_sid = 'select project_name,mainSID,mainIP from qcloud_info.db_info where created >= \'%s\' and  created <= \'%s\';' % (
     Datetime_Format.NowDayBegin(), Datetime_Format.NowDayEnd())
 
     cqb_redis = 'select project_name,sid,ip from qcloud_info.redis_info where created >=\'%s\' and  created <=\'%s\';' % (
@@ -94,7 +94,7 @@ class Qcloud_api(object):
         for item in res:
 
             projectname = item[0]
-            master_sid = item[1]
+            main_sid = item[1]
             sidip = item[2]
             monitor_module = 'monitor'
             monitor_action = 'GetMonitorData'
@@ -104,7 +104,7 @@ class Qcloud_api(object):
             for metric in metricName:
                 monitor_params = {'namespace': 'qce/cdb',
                                   'dimensions.0.name': 'uInstanceId',
-                                  'dimensions.0.value': master_sid,
+                                  'dimensions.0.value': main_sid,
                                   'metricName': metric,
                                   'startTime': self.startTime,
                                   'endTime': self.endTime
@@ -115,7 +115,7 @@ class Qcloud_api(object):
                 monitor_total = nomitor_service.call(monitor_action, monitor_params)
 
                 monitor_db_info = json.loads(monitor_total)["dataPoints"]
-                res = (projectname, master_sid, sidip, round(max(monitor_db_info)))
+                res = (projectname, main_sid, sidip, round(max(monitor_db_info)))
                 self.cdb_info.append(res)
 
         return self.cdb_info
@@ -128,7 +128,7 @@ class Qcloud_api(object):
 
         for item in res:
             projectname = item[0]
-            master_sid = item[1]
+            main_sid = item[1]
             sidip = item[2]
 
             monitor_module = 'monitor'
@@ -137,7 +137,7 @@ class Qcloud_api(object):
             for metric in metricName:
                 monitor_params = {'namespace': 'qce/redis',
                                   'dimensions.0.name': 'redis_uuid',
-                                  'dimensions.0.value': master_sid,
+                                  'dimensions.0.value': main_sid,
                                   'metricName': metric,
                                   'startTime': self.startTime,
                                   'endTime': self.endTime
@@ -147,7 +147,7 @@ class Qcloud_api(object):
                 monitor_total = nomitor_service.call(monitor_action, monitor_params)
                 monitor_db_info = json.loads(monitor_total)["dataPoints"]
 
-                res = (projectname, master_sid, sidip, round(max(monitor_db_info)))
+                res = (projectname, main_sid, sidip, round(max(monitor_db_info)))
                 self.redis_info.append(res)
         #print self.redis_info
         return self.redis_info

@@ -88,7 +88,7 @@ class Qcloud_api(object):
 
     def get_host(self):
         self.get_conn()
-        sql = 'SELECT project_name,masterSID from qcloud_info.db_info where created >= \'%s\' and created <= \'%s\';' % (zeroToday, lastToday)
+        sql = 'SELECT project_name,mainSID from qcloud_info.db_info where created >= \'%s\' and created <= \'%s\';' % (zeroToday, lastToday)
         host_re = self.query_db(sql)
         return host_re
 

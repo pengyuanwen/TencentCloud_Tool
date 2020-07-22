@@ -62,7 +62,7 @@ class DB_API(object):
 
     def get_all_host(self):
 
-        sql = 'SELECT project_name,masterip from qcloud_info.db_info where created >= \'%s\' and created <= \'%s\' limit 100;' % (zeroToday,lastToday)
+        sql = 'SELECT project_name,mainip from qcloud_info.db_info where created >= \'%s\' and created <= \'%s\' limit 100;' % (zeroToday,lastToday)
         host_res = self.query_db(sql)
         for i in host_res:
             project_name = i[0]

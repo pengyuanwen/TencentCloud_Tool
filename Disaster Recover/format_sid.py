@@ -28,7 +28,7 @@ class Data_Hander(object):
             #广州-上海
             for i in gz.split(','):
                 try:
-                    select_sql = 'select drSID from qcloud_info.db_info where masterSID in (\'%s\') and drSID is not null limit 1;' % (i)
+                    select_sql = 'select drSID from qcloud_info.db_info where mainSID in (\'%s\') and drSID is not null limit 1;' % (i)
                     re = self.MySQL.query(select_sql)
                     a = (i, re[0][0])
                     self.re_all.append(a)
@@ -43,7 +43,7 @@ class Data_Hander(object):
             for i in sh.split(','):
                 #ip = i.strip('\n')
                 try:
-                    select_sql = 'select masterSID from qcloud_info.db_info where drSID in (\'%s\') limit 1;' % (i)
+                    select_sql = 'select mainSID from qcloud_info.db_info where drSID in (\'%s\') limit 1;' % (i)
                     re = self.MySQL.query(select_sql)
                     a = (i, re[0][0])
                     self.re_all.append(a)
