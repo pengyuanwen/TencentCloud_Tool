@@ -9,12 +9,12 @@ import json
 from conf.Tencent_conf import Tencent_Api
 
 
-class Rebulid_Master_Slave(Tencent_Api):
+class Rebulid_Main_Subordinate(Tencent_Api):
 
     # 重新建立主从复制关系(上海-广州）
-    def change_master_to_sh(self):
+    def change_main_to_sh(self):
         sh_all_job_id = []
-        self.Action = 'SwitchDrMasterRole'
+        self.Action = 'SwitchDrMainRole'
         self.config["Region"] = "ap-shanghai"
         #广州：上海
         with open('/home/yuanwen.peng/scripts/python/rongzai/write_sid.txt','a+') as f:
@@ -50,9 +50,9 @@ class Rebulid_Master_Slave(Tencent_Api):
         print sh_all_job_id
 
     # 重新建立主从复制关系(广州-上海）
-    def change_master_to_gz(self):
+    def change_main_to_gz(self):
 
-        self.Action = 'SwitchDrMasterRole'
+        self.Action = 'SwitchDrMainRole'
         self.config["Region"] = "ap-guangzhou"
 
         # 主实例和灾备实例对应关系（上海：广州）
@@ -94,13 +94,13 @@ class Rebulid_Master_Slave(Tencent_Api):
 
 if __name__ == '__main__':
     region_addr = sys.argv[1]
-    Rebulid_M_S = Rebulid_Master_Slave()
+    Rebulid_M_S = Rebulid_Main_Subordinate()
     if region_addr == 'gz':
         # 上海提升为主库
-        Rebulid_M_S.change_master_to_sh()
+        Rebulid_M_S.change_main_to_sh()
     elif region_addr == 'sh':
         # 广州提升为主库
-        Rebulid_M_S.change_master_to_gz()
+        Rebulid_M_S.change_main_to_gz()
     else:
         print "参数输入错误"
 

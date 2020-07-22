@@ -15,29 +15,29 @@ class Read_Only(Tencent_Api):
     def __init__(self):
         super(Read_Only,self).__init__()
         # 切换前主实例的实例ID(广州）
-        self.all_gz_master_sid = File_Read_Write('gz').read_file().split(',')
+        self.all_gz_main_sid = File_Read_Write('gz').read_file().split(',')
         # 切换前主实例的实例ID(上海）
-        self.all_sh_master_sid = File_Read_Write('sh').read_file().split(',')
+        self.all_sh_main_sid = File_Read_Write('sh').read_file().split(',')
 
 
     def gz_read_only(self):
 
-        for master_id in self.all_gz_master_sid:
-            self.action_param = {'instanceId': master_id, 'readOnly': 1}
+        for main_id in self.all_gz_main_sid:
+            self.action_param = {'instanceId': main_id, 'readOnly': 1}
             result = self.execute()
             status = result["codeDesc"]
-            print "广州主实例SID:%s,开启read_only:%s" % (master_id, status)
+            print "广州主实例SID:%s,开启read_only:%s" % (main_id, status)
 
 
     # 主库开启只读（上海）
     def sh_read_only(self):
 
         self.config["Region"] = "ap-shanghai"
-        for master_id in self.all_sh_master_sid:
-            self.action_param = {'instanceId': master_id, 'readOnly': 1}
+        for main_id in self.all_sh_main_sid:
+            self.action_param = {'instanceId': main_id, 'readOnly': 1}
             result = self.execute()
             status = result["codeDesc"]
-            print "上海主实例SID:%s,开启read_only:%s" % (master_id, status)
+            print "上海主实例SID:%s,开启read_only:%s" % (main_id, status)
 
 
 if __name__ == '__main__':

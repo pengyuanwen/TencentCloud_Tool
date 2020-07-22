@@ -9,18 +9,18 @@ sys.setdefaultencoding('utf-8')
 from conf.Tencent_conf import Tencent_Api
 from template.File_Hander import File_Read_Write
 
-class Change_Master_Slave(Tencent_Api):
+class Change_Main_Subordinate(Tencent_Api):
 
     def __init__(self):
-        super(Change_Master_Slave,self).__init__()
+        super(Change_Main_Subordinate,self).__init__()
 
     # 提升灾备为主(灾备为上海)
-    def Change_sh_for_master(self):
+    def Change_sh_for_main(self):
         sh_all_job_id = []
         #地域选择为上海
         region = 'sh'
         self.config["Region"] = "ap-shanghai"
-        self.Action = "SwitchDrInstanceToMaster"
+        self.Action = "SwitchDrInstanceToMain"
         #从配置文件获取上海的实例ID
         # 主实例和灾备实例对应关系（广州：上海）
         File_Opera = File_Read_Write(region)
@@ -46,12 +46,12 @@ class Change_Master_Slave(Tencent_Api):
         print sh_all_job_id
 
     # 提升灾备为主，回切（灾备为广州）
-    def Change_gz_for_master(self):
+    def Change_gz_for_main(self):
         gz_all_job_id = []
         # 地域选择为广州
         region = 'gz'
         self.config["Region"] = "ap-guangzhou"
-        self.Action = "SwitchDrInstanceToMaster"
+        self.Action = "SwitchDrInstanceToMain"
         # 主实例和灾备实例对应关系（上海：广州）
         File_Opera = File_Read_Write(region)
         gz_dr_sid = File_Opera.read_file()
@@ -79,13 +79,13 @@ class Change_Master_Slave(Tencent_Api):
 
 if __name__ == '__main__':
     region_addr = sys.argv[1]
-    Break_M_S = Change_Master_Slave()
+    Break_M_S = Change_Main_Subordinate()
     if region_addr == 'gz':
         # 提升灾备（上海）为主实例，并断开复制
-        Break_M_S.Change_sh_for_master()
+        Break_M_S.Change_sh_for_main()
     elif region_addr == 'sh':
         # 提升灾备（广州）为主实例，并断开复制
-        Break_M_S.Change_gz_for_master()
+        Break_M_S.Change_gz_for_main()
     else:
         print "参数输入错误"
 

@@ -26,8 +26,8 @@ class Check_Mysql():
         self.cur.close()
         self.conn.close()
 
-    def check_slave_status(self):
-        sql = "show slave status;"
+    def check_subordinate_status(self):
+        sql = "show subordinate status;"
         ret = self.conn_query(sql)
         self.close()
         return ret
@@ -38,6 +38,6 @@ content = ip.readlines()
 for i in content:
     # result = i.strip('\n')
     mysql = Check_Mysql(i)
-    ret = mysql.check_slave_status()
+    ret = mysql.check_subordinate_status()
     slag = ret[0][32]
     print "ip:%s,延迟时间:%s" % (i.strip('\n'), slag)

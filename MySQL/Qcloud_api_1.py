@@ -60,22 +60,22 @@ class Qcloud_api(object):
                 for item in db_info:
                     sid = item.get('uInstanceId')
                     sid_name = item.get('cdbInstanceName')
-                    master_ip = item.get('cdbInstanceVip')
-                    slave_info = item.get('roInfo')
+                    main_ip = item.get('cdbInstanceVip')
+                    subordinate_info = item.get('roInfo')
                     dr_info = item.get('drInfo')
                     disk_info = item.get('volume')
-                    master_sid = item.get("cdbInstanceType")
+                    main_sid = item.get("cdbInstanceType")
 
-                    if master_sid == 3:
+                    if main_sid == 3:
                         pass
                     else:
-                        if not slave_info:
-                            slave_info = '0'
-                            slave_sid = slave_info
-                            slave_ip = slave_info
+                        if not subordinate_info:
+                            subordinate_info = '0'
+                            subordinate_sid = subordinate_info
+                            subordinate_ip = subordinate_info
                         else:
-                            slave_sid = slave_info[0].get('uInstanceId')
-                            slave_ip = slave_info[0].get('vip')
+                            subordinate_sid = subordinate_info[0].get('uInstanceId')
+                            subordinate_ip = subordinate_info[0].get('vip')
 
                         if not dr_info:
                             dr_info = '0'
@@ -83,7 +83,7 @@ class Qcloud_api(object):
                         else:
                             dr_sid = dr_info[0].get('uInstanceId')
 
-                        self.all_info.append([sid_name, sid, master_ip, slave_sid, slave_ip, dr_sid, disk_info])
+                        self.all_info.append([sid_name, sid, main_ip, subordinate_sid, subordinate_ip, dr_sid, disk_info])
 
         #灾备实例信息
         def Dr_Info(self):
@@ -107,7 +107,7 @@ class Qcloud_api(object):
         #磁盘使用率
         def Check_Disk(self):
             for i in self.all_info:
-                master_sid = i[1]
+                main_sid = i[1]
                 monitor_module = 'monitor'
                 monitor_action = 'GetMonitorData'
                 metricName = ['real_capacity','volume_rate']
@@ -115,7 +115,7 @@ class Qcloud_api(object):
                 for metric in metricName:
                     monitor_params = {'namespace': 'qce/cdb',
                                            'dimensions.0.name': 'uInstanceId',
-                                           'dimensions.0.value': master_sid,
+                                           'dimensions.0.value': main_sid,
                                            'metricName': metric,
                                            'period': 60 / 300
                                            }
@@ -215,17 +215,17 @@ class DB_API(object):
 
         for i in self.ret:
             project_name = i[0]
-            masterSID = i[1]
-            masterIP = i[2]
-            slaveSID = i[3]
-            slaveIP = i[4]
+            mainSID = i[1]
+            mainIP = i[2]
+            subordinateSID = i[3]
+            subordinateIP = i[4]
             drSID = i[5]
             disk_total = i[6]
             disk_usage = i[7]
             disk_percent = i[8] * 1000
             drIP = i[9]
-            sql = 'insert into qcloud_info.db_info(project_name,masterSID,masterIP,slaveSID,slaveIP,drSID,drIP,disk_total,disk_usage,disk_percent) values (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%s,%s,\'%s\');'\
-                  % (project_name, masterSID, masterIP, slaveSID, slaveIP, drSID, drIP,disk_total,disk_usage,(disk_usage/disk_total)*100)
+            sql = 'insert into qcloud_info.db_info(project_name,mainSID,mainIP,subordinateSID,subordinateIP,drSID,drIP,disk_total,disk_usage,disk_percent) values (\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%s,%s,\'%s\');'\
+                  % (project_name, mainSID, mainIP, subordinateSID, subordinateIP, drSID, drIP,disk_total,disk_usage,(disk_usage/disk_total)*100)
             print sql
             self.insert(sql)
 
